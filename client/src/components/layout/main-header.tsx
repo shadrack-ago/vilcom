@@ -1,0 +1,46 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Plus, Search } from "lucide-react";
+
+interface MainHeaderProps {
+  title: string;
+  onAddClick: () => void;
+  searchPlaceholder?: string;
+  onSearch?: (term: string) => void;
+}
+
+export function MainHeader({ 
+  title, 
+  onAddClick,
+  searchPlaceholder = "Search...",
+  onSearch
+}: MainHeaderProps) {
+  return (
+    <header className="bg-white shadow">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-semibold text-gray-800">{title}</h1>
+          
+          <div className="flex space-x-2">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+              <Input 
+                type="text" 
+                placeholder={searchPlaceholder} 
+                className="pl-10 pr-3 py-2"
+                onChange={(e) => onSearch && onSearch(e.target.value)}
+              />
+            </div>
+            
+            <Button onClick={onAddClick}>
+              <Plus className="h-5 w-5 mr-2" />
+              Add Shift
+            </Button>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
