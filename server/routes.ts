@@ -5,6 +5,14 @@ import { z } from "zod";
 import { insertShiftSchema, insertTeamMemberSchema, insertShiftTypeSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Initialize database with sample data if needed
+  try {
+    await (storage as any).initializeDefaultData();
+    console.log("Database initialization check complete.");
+  } catch (error) {
+    console.error("Failed to initialize database:", error);
+  }
+  
   // put application routes here
   // prefix all routes with /api
 

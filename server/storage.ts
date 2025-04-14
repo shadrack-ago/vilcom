@@ -34,6 +34,9 @@ export interface IStorage {
   updateShift(id: number, shift: Partial<InsertShift>): Promise<Shift | undefined>;
   deleteShift(id: number): Promise<boolean>;
   getWeekSchedule(date: Date): Promise<WeekSchedule>;
+  
+  // Initialization
+  initializeDefaultData(): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -54,10 +57,12 @@ export class MemStorage implements IStorage {
     this.shifts = new Map();
     
     // Initialize with default data
-    this.initializeDefaultData();
+    this.initializeDefaultData().catch(err => {
+      console.error("Failed to initialize default data:", err);
+    });
   }
 
-  private initializeDefaultData() {
+  async initializeDefaultData(): Promise<void> {
     // Create default shift types
     const morningShift = this.createShiftType({
       name: "Morning Shift",
