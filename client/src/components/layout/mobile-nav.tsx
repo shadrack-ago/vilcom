@@ -24,11 +24,11 @@ export function MobileNav({ currentPath }: MobileNavProps) {
             <Link 
               key={item.path} 
               href={item.path}
-              className={`inline-flex flex-col items-center justify-center py-3 hover:bg-gray-50 ${
-                isActive ? "text-primary-600" : "text-gray-500"
+              className={`inline-flex flex-col items-center justify-center py-3 hover:bg-blue-50 ${
+                isActive ? "text-blue-600 font-medium" : "text-gray-500"
               }`}
             >
-              <Icon className="h-6 w-6" />
+              <Icon className={`h-6 w-6 ${isActive ? "text-blue-600" : ""}`} />
               <span className="text-xs mt-1">{item.label}</span>
             </Link>
           );

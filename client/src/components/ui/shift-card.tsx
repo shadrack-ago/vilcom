@@ -16,8 +16,8 @@ export function ShiftCard({ shift, onClick }: ShiftCardProps) {
   const getBgColor = () => {
     if (needsCoverage) return 'bg-red-100 border-l-4 border-red-500';
     
-    // Since we don't have shift types yet in the API response, use a default color
-    return 'bg-blue-100 border-l-4 border-blue-500';
+    // Since we don't have shift types yet in the API response, use a vibrant blue color
+    return 'bg-blue-100 border-l-4 border-blue-600 shadow-sm hover:shadow-md';
   };
 
   // Format date for display

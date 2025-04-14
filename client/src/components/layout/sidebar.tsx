@@ -16,8 +16,8 @@ export function Sidebar({ currentPath }: SidebarProps) {
 
   return (
     <div className="hidden md:flex md:flex-shrink-0">
-      <div className="flex flex-col w-64 bg-primary-700 text-white">
-        <div className="flex items-center justify-center h-16 px-4 border-b border-primary-600">
+      <div className="flex flex-col w-64 bg-blue-700 text-white">
+        <div className="flex items-center justify-center h-16 px-4 border-b border-blue-600 bg-blue-800">
           <h1 className="text-xl font-bold">Vilcom Networks</h1>
         </div>
         
@@ -33,8 +33,8 @@ export function Sidebar({ currentPath }: SidebarProps) {
                   href={item.path}
                   className={`flex items-center px-4 py-3 text-sm font-medium rounded-md ${
                     isActive 
-                      ? "bg-primary-800 text-white" 
-                      : "text-primary-100 hover:bg-primary-600"
+                      ? "bg-blue-900 text-white" 
+                      : "text-blue-100 hover:bg-blue-600"
                   }`}
                 >
                   <Icon className="h-5 w-5 mr-3" />

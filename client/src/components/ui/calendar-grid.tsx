@@ -22,15 +22,15 @@ export function CalendarGrid({ days, onShiftClick, currentDate = new Date() }: C
   };
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden border border-blue-200">
       {/* Calendar Header (days of week) */}
-      <div className="grid grid-cols-7 border-b border-gray-200">
+      <div className="grid grid-cols-7 border-b border-blue-200">
         {days.map((day) => {
           const dateObj = formatDate(day.date);
           return (
             <div
               key={dateObj.toISOString()}
-              className="min-h-[30px] flex justify-center items-center bg-gray-50 font-medium text-gray-500"
+              className="min-h-[30px] flex justify-center items-center bg-blue-50 font-medium text-blue-700"
             >
               {format(dateObj, "EEE d")}
             </div>
@@ -46,8 +46,8 @@ export function CalendarGrid({ days, onShiftClick, currentDate = new Date() }: C
           return (
             <div
               key={dateObj.toISOString()}
-              className={`min-h-[100px] p-2 border-b border-r border-gray-200 ${
-                isCurrentDay ? "bg-blue-50" : ""
+              className={`min-h-[100px] p-2 border-b border-r border-blue-100 ${
+                isCurrentDay ? "bg-blue-50 shadow-inner" : ""
               }`}
             >
               {day.shifts.map((shift) => (
