@@ -51,13 +51,7 @@ export function TeamMembersAdmin() {
   // Add team member mutation
   const addMutation = useMutation({
     mutationFn: (data: TeamMemberFormData) => {
-      return apiRequest('/api/team-members', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      return apiRequest('POST', '/api/team-members', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/team-members'] });
@@ -81,13 +75,7 @@ export function TeamMembersAdmin() {
   // Update team member mutation
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<TeamMemberFormData> }) => {
-      return apiRequest(`/api/team-members/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      return apiRequest('PATCH', `/api/team-members/${id}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/team-members'] });
@@ -111,9 +99,7 @@ export function TeamMembersAdmin() {
   // Delete team member mutation
   const deleteMutation = useMutation({
     mutationFn: (id: number) => {
-      return apiRequest(`/api/team-members/${id}`, {
-        method: 'DELETE',
-      });
+      return apiRequest('DELETE', `/api/team-members/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/team-members'] });

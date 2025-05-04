@@ -46,13 +46,7 @@ export function ShiftTypesAdmin() {
   // Add shift type mutation
   const addMutation = useMutation({
     mutationFn: (data: ShiftTypeFormData) => {
-      return apiRequest('/api/shift-types', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      return apiRequest('POST', '/api/shift-types', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/shift-types'] });
@@ -76,13 +70,7 @@ export function ShiftTypesAdmin() {
   // Update shift type mutation
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<ShiftTypeFormData> }) => {
-      return apiRequest(`/api/shift-types/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      return apiRequest('PATCH', `/api/shift-types/${id}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/shift-types'] });
@@ -106,9 +94,7 @@ export function ShiftTypesAdmin() {
   // Delete shift type mutation
   const deleteMutation = useMutation({
     mutationFn: (id: number) => {
-      return apiRequest(`/api/shift-types/${id}`, {
-        method: 'DELETE',
-      });
+      return apiRequest('DELETE', `/api/shift-types/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/shift-types'] });

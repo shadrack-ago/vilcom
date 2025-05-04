@@ -97,13 +97,7 @@ export function ShiftsAdmin() {
   // Add shift mutation
   const addMutation = useMutation({
     mutationFn: (data: ShiftFormData) => {
-      return apiRequest('/api/shifts', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      return apiRequest('POST', '/api/shifts', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/schedule/week'] });
