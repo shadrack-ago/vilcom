@@ -7,6 +7,7 @@ import Schedule from "@/pages/schedule";
 import Team from "@/pages/team";
 import Notifications from "@/pages/notifications";
 import Settings from "@/pages/settings";
+import Admin from "@/pages/admin";
 import { Sidebar } from "@/components/layout/sidebar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { ScheduleProvider } from "./contexts/schedule-context";
@@ -23,6 +24,7 @@ function Router() {
           <Route path="/schedule" component={Schedule} />
           <Route path="/team" component={Team} />
           <Route path="/notifications" component={Notifications} />
+          <Route path="/admin" component={Admin} />
           <Route path="/settings" component={Settings} />
           <Route component={NotFound} />
         </Switch>

@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Calendar, Users, Bell, User } from "lucide-react";
+import { Calendar, Users, Bell, User, ShieldAlert } from "lucide-react";
 
 interface MobileNavProps {
   currentPath: string;
@@ -9,7 +9,7 @@ export function MobileNav({ currentPath }: MobileNavProps) {
   const navItems = [
     { path: "/schedule", label: "Schedule", icon: Calendar },
     { path: "/team", label: "Team", icon: Users },
-    { path: "/notifications", label: "Notifications", icon: Bell },
+    { path: "/admin", label: "Admin", icon: ShieldAlert },
     { path: "/settings", label: "Profile", icon: User },
   ];
 

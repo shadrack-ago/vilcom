@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
-import { Calendar, Users, Bell, Settings, User } from "lucide-react";
+import { Calendar, Users, Bell, Settings, User, ShieldAlert } from "lucide-react";
 
 interface SidebarProps {
   currentPath: string;
@@ -11,6 +11,7 @@ export function Sidebar({ currentPath }: SidebarProps) {
     { path: "/schedule", label: "Schedule", icon: Calendar },
     { path: "/team", label: "Team", icon: Users },
     { path: "/notifications", label: "Notifications", icon: Bell },
+    { path: "/admin", label: "Admin", icon: ShieldAlert },
     { path: "/settings", label: "Settings", icon: Settings },
   ];
 

@@ -7,11 +7,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Pencil, Trash2, UserPlus } from "lucide-react";
+import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
+import { Pencil, Trash2, Plus } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
-// Team Member type based on schema
+// TeamMember type based on schema
 type TeamMember = {
   id: number;
   name: string;
@@ -31,13 +32,13 @@ export function TeamMembersAdmin() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentTeamMember, setCurrentTeamMember] = useState<TeamMember | null>(null);
+  const [currentMember, setCurrentMember] = useState<TeamMember | null>(null);
   const [formData, setFormData] = useState<TeamMemberFormData>({
     name: "",
     position: "",
     email: "",
     phone: "",
-    avatarUrl: "",
+    avatarUrl: null,
     status: "active"
   });
 
@@ -133,19 +134,11 @@ export function TeamMembersAdmin() {
   });
 
   // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value
-    }));
-  };
-
-  // Handle status select change
-  const handleStatusChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      status: value
     }));
   };
 
@@ -156,21 +149,21 @@ export function TeamMembersAdmin() {
       position: "",
       email: "",
       phone: "",
-      avatarUrl: "",
+      avatarUrl: null,
       status: "active"
     });
-    setCurrentTeamMember(null);
+    setCurrentMember(null);
   };
 
   // Open edit dialog with team member data
   const handleEditClick = (teamMember: TeamMember) => {
-    setCurrentTeamMember(teamMember);
+    setCurrentMember(teamMember);
     setFormData({
       name: teamMember.name,
       position: teamMember.position,
       email: teamMember.email,
       phone: teamMember.phone || "",
-      avatarUrl: teamMember.avatarUrl || "",
+      avatarUrl: teamMember.avatarUrl,
       status: teamMember.status
     });
     setIsEditDialogOpen(true);
@@ -178,7 +171,7 @@ export function TeamMembersAdmin() {
 
   // Open delete confirmation dialog
   const handleDeleteClick = (teamMember: TeamMember) => {
-    setCurrentTeamMember(teamMember);
+    setCurrentMember(teamMember);
     setIsDeleteDialogOpen(true);
   };
 
@@ -191,9 +184,9 @@ export function TeamMembersAdmin() {
   // Handle edit form submission
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (currentTeamMember) {
+    if (currentMember) {
       updateMutation.mutate({
-        id: currentTeamMember.id,
+        id: currentMember.id,
         data: formData
       });
     }
@@ -201,8 +194,8 @@ export function TeamMembersAdmin() {
 
   // Handle delete confirmation
   const handleDeleteConfirm = () => {
-    if (currentTeamMember) {
-      deleteMutation.mutate(currentTeamMember.id);
+    if (currentMember) {
+      deleteMutation.mutate(currentMember.id);
     }
   };
 
@@ -232,8 +225,8 @@ export function TeamMembersAdmin() {
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button className="flex items-center gap-1">
-              <UserPlus className="h-4 w-4" />
-              <span>Add Member</span>
+              <Plus className="h-4 w-4" />
+              <span>Add Team Member</span>
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -241,28 +234,28 @@ export function TeamMembersAdmin() {
               <DialogTitle>Add New Team Member</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleAddSubmit} className="space-y-4 pt-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="position">Position</Label>
-                  <Input
-                    id="position"
-                    name="position"
-                    value={formData.position}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="position">Position</Label>
+                <Input
+                  id="position"
+                  name="position"
+                  value={formData.position}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -274,43 +267,37 @@ export function TeamMembersAdmin() {
                   required
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    value={formData.phone || ""}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
-                  <Select 
-                    value={formData.status} 
-                    onValueChange={handleStatusChange}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="pto">PTO</SelectItem>
-                      <SelectItem value="pto_soon">PTO Soon</SelectItem>
-                      <SelectItem value="unavailable">Unavailable</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="avatarUrl">Avatar URL (Optional)</Label>
+                <Label htmlFor="phone">Phone</Label>
                 <Input
-                  id="avatarUrl"
-                  name="avatarUrl"
-                  value={formData.avatarUrl || ""}
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone || ""}
                   onChange={handleInputChange}
                 />
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="status">Status</Label>
+                <Select 
+                  value={formData.status} 
+                  onValueChange={(value) => 
+                    setFormData(prev => ({ ...prev, status: value }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                    <SelectItem value="on-leave">On Leave</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               <DialogFooter>
                 <DialogClose asChild>
                   <Button type="button" variant="outline">Cancel</Button>
@@ -338,6 +325,7 @@ export function TeamMembersAdmin() {
                 <TableHead>Name</TableHead>
                 <TableHead>Position</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead>Phone</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -345,26 +333,30 @@ export function TeamMembersAdmin() {
             <TableBody>
               {teamMembers.map((member: TeamMember) => (
                 <TableRow key={member.id}>
-                  <TableCell className="font-medium">{member.name}</TableCell>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center space-x-3">
+                      <AvatarWithFallback
+                        src={member.avatarUrl || ""}
+                        name={member.name}
+                        className="h-8 w-8"
+                      />
+                      <span>{member.name}</span>
+                    </div>
+                  </TableCell>
                   <TableCell>{member.position}</TableCell>
                   <TableCell>{member.email}</TableCell>
+                  <TableCell>{member.phone || "-"}</TableCell>
                   <TableCell>
-                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      member.status === 'active' 
-                        ? 'bg-green-100 text-green-800' 
-                        : member.status === 'pto' 
-                        ? 'bg-blue-100 text-blue-800'
-                        : member.status === 'pto_soon'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {member.status === 'active' 
-                        ? 'Active' 
-                        : member.status === 'pto' 
-                        ? 'PTO'
-                        : member.status === 'pto_soon'
-                        ? 'PTO Soon'
-                        : 'Unavailable'}
+                    <span 
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                        member.status === 'active' 
+                          ? 'bg-green-100 text-green-800' 
+                          : member.status === 'on-leave'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
+                      {member.status.charAt(0).toUpperCase() + member.status.slice(1).replace('-', ' ')}
                     </span>
                   </TableCell>
                   <TableCell className="text-right">
@@ -401,28 +393,28 @@ export function TeamMembersAdmin() {
             <DialogTitle>Edit Team Member</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleEditSubmit} className="space-y-4 pt-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-name">Name</Label>
-                <Input
-                  id="edit-name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-position">Position</Label>
-                <Input
-                  id="edit-position"
-                  name="position"
-                  value={formData.position}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-name">Name</Label>
+              <Input
+                id="edit-name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+              />
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-position">Position</Label>
+              <Input
+                id="edit-position"
+                name="position"
+                value={formData.position}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="edit-email">Email</Label>
               <Input
@@ -434,43 +426,37 @@ export function TeamMembersAdmin() {
                 required
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-phone">Phone</Label>
-                <Input
-                  id="edit-phone"
-                  name="phone"
-                  value={formData.phone || ""}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-status">Status</Label>
-                <Select 
-                  value={formData.status} 
-                  onValueChange={handleStatusChange}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="pto">PTO</SelectItem>
-                    <SelectItem value="pto_soon">PTO Soon</SelectItem>
-                    <SelectItem value="unavailable">Unavailable</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+
             <div className="space-y-2">
-              <Label htmlFor="edit-avatarUrl">Avatar URL (Optional)</Label>
+              <Label htmlFor="edit-phone">Phone</Label>
               <Input
-                id="edit-avatarUrl"
-                name="avatarUrl"
-                value={formData.avatarUrl || ""}
+                id="edit-phone"
+                name="phone"
+                type="tel"
+                value={formData.phone || ""}
                 onChange={handleInputChange}
               />
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-status">Status</Label>
+              <Select 
+                value={formData.status} 
+                onValueChange={(value) => 
+                  setFormData(prev => ({ ...prev, status: value }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                  <SelectItem value="on-leave">On Leave</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="outline">Cancel</Button>
@@ -490,8 +476,8 @@ export function TeamMembersAdmin() {
             <DialogTitle>Delete Team Member</DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            <p>Are you sure you want to delete <strong>{currentTeamMember?.name}</strong>?</p>
-            <p className="text-sm text-muted-foreground mt-2">This action cannot be undone.</p>
+            <p>Are you sure you want to delete <strong>{currentMember?.name}</strong>?</p>
+            <p className="text-sm text-muted-foreground mt-2">This action cannot be undone and may affect existing shifts.</p>
           </div>
           <DialogFooter>
             <DialogClose asChild>
