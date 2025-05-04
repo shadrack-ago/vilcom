@@ -121,13 +121,7 @@ export function ShiftsAdmin() {
   // Update shift mutation
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<ShiftFormData> }) => {
-      return apiRequest(`/api/shifts/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      return apiRequest('PATCH', `/api/shifts/${id}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/schedule/week'] });
@@ -151,9 +145,7 @@ export function ShiftsAdmin() {
   // Delete shift mutation
   const deleteMutation = useMutation({
     mutationFn: (id: number) => {
-      return apiRequest(`/api/shifts/${id}`, {
-        method: 'DELETE',
-      });
+      return apiRequest('DELETE', `/api/shifts/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/schedule/week'] });
