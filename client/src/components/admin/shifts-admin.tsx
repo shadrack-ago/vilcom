@@ -450,16 +450,24 @@ export function ShiftsAdmin() {
                 <TableRow key={shift.id}>
                   <TableCell>{formatDateDisplay(shift.date)}</TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      <div 
-                        className="w-3 h-3 rounded-full" 
-                        style={{ backgroundColor: shift.shiftType.color }}
-                      />
-                      <span>{shift.shiftType.name}</span>
-                    </div>
+                    {shift.shiftType ? (
+                      <div className="flex items-center gap-2">
+                        <div 
+                          className="w-3 h-3 rounded-full" 
+                          style={{ backgroundColor: shift.shiftType.color }}
+                        />
+                        <span>{shift.shiftType.name}</span>
+                      </div>
+                    ) : (
+                      <span className="text-muted-foreground">Unknown shift type</span>
+                    )}
                   </TableCell>
                   <TableCell>
-                    {formatTime(shift.shiftType.startTime)} - {formatTime(shift.shiftType.endTime)}
+                    {shift.shiftType ? (
+                      `${formatTime(shift.shiftType.startTime)} - ${formatTime(shift.shiftType.endTime)}`
+                    ) : (
+                      <span className="text-muted-foreground">No time information</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     {shift.teamMember ? shift.teamMember.name : (
@@ -624,8 +632,10 @@ export function ShiftsAdmin() {
           </DialogHeader>
           <div className="py-4">
             <p>
-              Are you sure you want to delete the {currentShift?.shiftType?.name} shift on{" "}
-              {currentShift?.date && formatDateDisplay(currentShift.date)}?
+              Are you sure you want to delete the 
+              {currentShift?.shiftType ? ` ${currentShift.shiftType.name} ` : " "}
+              shift on{" "}
+              {currentShift?.date ? formatDateDisplay(currentShift.date) : ""}?
             </p>
             <p className="text-sm text-muted-foreground mt-2">This action cannot be undone.</p>
           </div>
