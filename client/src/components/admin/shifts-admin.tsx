@@ -206,7 +206,7 @@ export function ShiftsAdmin() {
     setFormData({
       date: format(new Date(), 'yyyy-MM-dd'),
       teamMemberId: null,
-      shiftTypeId: shiftTypes.length > 0 ? shiftTypes[0].id : 0,
+      shiftTypeId: Array.isArray(shiftTypes) && shiftTypes.length > 0 ? shiftTypes[0].id : 0,
       notes: "",
       needsCoverage: false
     });
@@ -340,13 +340,13 @@ export function ShiftsAdmin() {
 
               <div className="space-y-2">
                 <Label htmlFor="shiftTypeId">Shift Type</Label>
-                {shiftTypes.length === 0 ? (
+                {!Array.isArray(shiftTypes) || shiftTypes.length === 0 ? (
                   <div className="text-sm text-red-500">
                     No shift types available. Please create a shift type first.
                   </div>
                 ) : (
                   <Select
-                    value={formData.shiftTypeId.toString()}
+                    value={formData.shiftTypeId ? formData.shiftTypeId.toString() : '0'}
                     onValueChange={(value) => handleSelectChange('shiftTypeId', value)}
                   >
                     <SelectTrigger>
@@ -549,7 +549,7 @@ export function ShiftsAdmin() {
             <div className="space-y-2">
               <Label htmlFor="edit-shiftTypeId">Shift Type</Label>
               <Select
-                value={formData.shiftTypeId.toString()}
+                value={formData.shiftTypeId ? formData.shiftTypeId.toString() : '0'}
                 onValueChange={(value) => handleSelectChange('shiftTypeId', value)}
               >
                 <SelectTrigger>
